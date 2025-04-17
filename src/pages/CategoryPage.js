@@ -12,7 +12,7 @@ function CategoryPage() {
     const fetchCategoryItems = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/category/${category}`
+          `http://localhost:5000/api/category/${encodeURIComponent(category)}`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -20,7 +20,12 @@ function CategoryPage() {
         const data = await response.json();
         setItems(data);
         // İlk harfi büyük yaparak kategori adını oluşturuyoruz.
-        setCategoryName(category.charAt(0).toUpperCase() + category.slice(1));
+        const decoded = decodeURIComponent(category); // "Soğuk İçecek"
+        const pretty = decoded
+          .split(" ")
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(" "); // "Soğuk İçecek"
+        setCategoryName(pretty);
       } catch (error) {
         console.error("Error fetching category items:", error);
       }
@@ -32,15 +37,16 @@ function CategoryPage() {
   return (
     <div className="min-h-screen bg-[#1a1a1a]">
       <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="flex items-center justify-between mb-16">
+        <div className="flex items-center justify-between mb-8">
           <Link
             to="/"
             className="text-amber-400 hover:text-amber-300 text-lg font-serif"
           >
             ← Ana Menü
           </Link>
+        </div>
+        <div className="flex text-center  justify-center items-center mb-8">
           <h1 className="text-4xl font-serif text-white">{categoryName}</h1>
-          <div className="w-20"></div>
         </div>
         <div className="grid grid-cols-1 gap-12">
           {items.map((item) => (
@@ -48,22 +54,23 @@ function CategoryPage() {
               key={item._id}
               className="bg-black bg-opacity-50 rounded-xl overflow-hidden"
             >
-              <div className="flex flex-col md:flex-row">
+              <div className="flex flex-col md:flex-row ">
                 <div className="md:w-1/2">
                   <img
-                    src={item.imageUrl}
+                    loading="lazy"
+                    src={`http://localhost:5000${item.imageUrl}`}
                     alt={item.name}
-                    className="w-full h-72 md:h-96 object-cover"
+                    className="w-full h-full object-cover object-center max-h-[170px]"
                   />
                 </div>
-                <div className="md:w-1/2 p-8 flex flex-col justify-center">
-                  <h2 className="text-3xl font-serif text-white mb-4">
+                <div className="md:w-1/2 p-4 flex flex-col justify-center">
+                  <h2 className="text-auto font-serif text-white mb-2">
                     {item.name}
                   </h2>
-                  <p className="text-gray-400 mb-6 text-lg italic">
+                  <p className="text-gray-400 mb-2 text-lg italic">
                     {item.description}
                   </p>
-                  <span className="text-2xl text-amber-400 font-light">
+                  <span className="text-auto text-amber-400 font-light">
                     ${item.price}
                   </span>
                 </div>

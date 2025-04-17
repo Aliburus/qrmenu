@@ -19,12 +19,11 @@ function Home() {
         ];
 
         // Her kategori için, örneğin ilk ürünün imageUrl bilgisini kullanarak kart oluşturabilirsiniz.
-        const categoryObjects = distinctCategories.map((cat) => {
-          // Data içinden, bu kategoriye ait ilk ürün bilgisini bulun.
-          const productForCat = data.find((item) => item.category === cat);
+        const categoryObjects = distinctCategories.map((cat, index) => {
           return {
             name: cat,
-            imageUrl: productForCat ? productForCat.imageUrl : "",
+            imageUrl: `http://localhost:5000/uploads/${index + 1}.jpg`,
+            // Resim dosya adlarını 1.jpg, 2.jpg, 3.jpg... şeklinde alıyoruz
             description: cat, // Ya da kategori açıklamasını farklı şekilde belirleyebilirsiniz.
           };
         });
@@ -53,13 +52,12 @@ function Home() {
           {categories.map((category) => (
             <Link
               key={category.name}
-              // Kategori veritabanında "Pizza", "Burger" gibi saklanıyorsa,
-              // URL'ye küçük harfe çevirip direk gönderiyoruz.
-              to={`/category/${category.name.toLowerCase()}`}
+              to={`/category/${encodeURIComponent(category.name)}`}
               className="group relative block"
             >
               <div className="aspect-[4/3] overflow-hidden rounded-xl">
                 <img
+                  loading="lazy"
                   src={category.imageUrl}
                   alt={category.name}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
