@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-import { ShoppingBagIcon, TagIcon } from "@heroicons/react/24/outline";
+import { ShoppingBagIcon } from "@heroicons/react/24/outline";
 
 function AdminLayout() {
   return (
@@ -16,13 +16,6 @@ function AdminLayout() {
           >
             <ShoppingBagIcon className="w-5 h-5 mr-2" />
             Ürünler
-          </Link>
-          <Link
-            to="/admin/categories"
-            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
-          >
-            <TagIcon className="w-5 h-5 mr-2" />
-            Kategoriler
           </Link>
         </nav>
       </div>

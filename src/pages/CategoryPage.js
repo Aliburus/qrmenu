@@ -9,6 +9,20 @@ function CategoryPage() {
   useEffect(() => {
     if (!category) return;
 
+    // Cache kontrolü
+    const cachedItems = sessionStorage.getItem(`category-${category}`);
+    if (cachedItems) {
+      setItems(JSON.parse(cachedItems)); // Cache'den veri al
+      // İlk harfi büyük yaparak kategori adını oluşturuyoruz.
+      const decoded = decodeURIComponent(category);
+      const pretty = decoded
+        .split(" ")
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ");
+      setCategoryName(pretty);
+      return; // Cache'den veri aldıktan sonra fetch yapmaya gerek yok
+    }
+
     const fetchCategoryItems = async () => {
       try {
         const response = await fetch(
@@ -19,12 +33,16 @@ function CategoryPage() {
         }
         const data = await response.json();
         setItems(data);
+
+        // Cache'e kaydet
+        sessionStorage.setItem(`category-${category}`, JSON.stringify(data));
+
         // İlk harfi büyük yaparak kategori adını oluşturuyoruz.
-        const decoded = decodeURIComponent(category); // "Soğuk İçecek"
+        const decoded = decodeURIComponent(category);
         const pretty = decoded
           .split(" ")
           .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-          .join(" "); // "Soğuk İçecek"
+          .join(" ");
         setCategoryName(pretty);
       } catch (error) {
         console.error("Error fetching category items:", error);
@@ -45,7 +63,7 @@ function CategoryPage() {
             ← Ana Menü
           </Link>
         </div>
-        <div className="flex text-center  justify-center items-center mb-8">
+        <div className="flex text-center justify-center items-center mb-8">
           <h1 className="text-4xl font-serif text-white">{categoryName}</h1>
         </div>
         <div className="grid grid-cols-1 gap-12">

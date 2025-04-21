@@ -5,7 +5,6 @@ import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 function AdminProducts() {
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -17,7 +16,6 @@ function AdminProducts() {
 
   useEffect(() => {
     fetchProducts();
-    fetchCategories();
   }, []);
 
   const fetchProducts = async () => {
@@ -29,18 +27,10 @@ function AdminProducts() {
     }
   };
 
-  const fetchCategories = async () => {
-    try {
-      const { data } = await axios.get("http://localhost:5000/api/categories");
-      setCategories(data);
-    } catch (err) {
-      console.error("Kategoriler yüklenirken hata oldu:", err);
-    }
-  };
-
   const handleEdit = (product) => {
     setEditingProduct(product);
-    setFormData(product); // Düzenlenecek ürünün bilgilerini formData'ya set et
+    setFormData(product);
+    window.scrollTo(0, 0);
   };
 
   const handleDelete = async (id) => {
@@ -48,6 +38,7 @@ function AdminProducts() {
     try {
       await axios.delete(`http://localhost:5000/api/menu/${id}`);
       fetchProducts();
+      alert("Ürün başarıyla silindi!");
     } catch (err) {
       console.error("Ürün silinirken hata oldu:", err);
     }
@@ -78,21 +69,23 @@ function AdminProducts() {
         category: "",
         imageUrl: "",
       });
+      alert("Ürün başarıyla kaydedildi!");
     } catch (err) {
       console.error("Ürün kaydedilirken hata oldu:", err);
     }
   };
+
   return (
     <div className="p-4 md:p-6">
       <h2 className="text-2xl font-bold mb-4">Ürün Yönetimi</h2>
 
-      {/* Ürün Formu */}
+      {/* Product Form */}
       <form
         onSubmit={handleSubmit}
         className="mb-8 bg-white p-4 rounded-lg shadow"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Ürün Adı */}
+          {/* Product Name */}
           <div>
             <label className="block mb-2 text-sm font-medium">Ürün Adı</label>
             <input
@@ -106,7 +99,7 @@ function AdminProducts() {
             />
           </div>
 
-          {/* Fiyat */}
+          {/* Price */}
           <div>
             <label className="block mb-2 text-sm font-medium">Fiyat</label>
             <input
@@ -120,7 +113,7 @@ function AdminProducts() {
             />
           </div>
 
-          {/* Kategori */}
+          {/* Category */}
           <div>
             <label className="block mb-2 text-sm font-medium">Kategori</label>
             <input
@@ -134,7 +127,7 @@ function AdminProducts() {
             />
           </div>
 
-          {/* Görsel */}
+          {/* Image Upload */}
           <div>
             <label className="block mb-2 text-sm font-medium">
               Ürün Görseli
@@ -145,7 +138,7 @@ function AdminProducts() {
             />
           </div>
 
-          {/* Açıklama */}
+          {/* Description */}
           <div className="col-span-1 md:col-span-2">
             <label className="block mb-2 text-sm font-medium">Açıklama</label>
             <textarea
@@ -168,7 +161,7 @@ function AdminProducts() {
         </button>
       </form>
 
-      {/* Ürün Listesi */}
+      {/* Product List */}
       <div className="bg-white rounded-lg shadow max-h-[500px] overflow-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="sticky top-0 bg-gray-50 z-10">

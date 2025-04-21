@@ -5,6 +5,12 @@ function Home() {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
+    const cachedData = sessionStorage.getItem("categories"); // Cache kontrolü
+    if (cachedData) {
+      setCategories(JSON.parse(cachedData)); // Cache varsa veriyi kullan
+      return; // Veriyi cache'den aldıktan sonra fetch yapmaya gerek yok
+    }
+
     const fetchMenuItems = async () => {
       try {
         const response = await fetch("http://localhost:5000/api/menu");
@@ -13,28 +19,25 @@ function Home() {
         }
         const data = await response.json();
 
-        // Menü ürünlerinden benzersiz kategori isimlerini çıkarın.
+        // Menü ürünlerinden benzersiz kategori isimlerini çıkarın
         const distinctCategories = [
           ...new Set(data.map((item) => item.category)),
         ];
 
-        // Her kategori için, örneğin ilk ürünün imageUrl bilgisini kullanarak kart oluşturabilirsiniz.
-        const categoryObjects = distinctCategories.map((cat, index) => {
-          return {
-            name: cat,
-            imageUrl: `http://localhost:5000/uploads/${index + 1}.jpg`,
-            // Resim dosya adlarını 1.jpg, 2.jpg, 3.jpg... şeklinde alıyoruz
-            description: cat, // Ya da kategori açıklamasını farklı şekilde belirleyebilirsiniz.
-          };
-        });
+        const categoryObjects = distinctCategories.map((cat, index) => ({
+          name: cat,
+          imageUrl: `http://localhost:5000/uploads/${index + 1}.jpg`,
+          description: cat,
+        }));
 
         setCategories(categoryObjects);
+        sessionStorage.setItem("categories", JSON.stringify(categoryObjects)); // Cache'le
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
     };
 
-    fetchMenuItems();
+    fetchMenuItems(); // Veriyi API'den al
   }, []);
 
   return (

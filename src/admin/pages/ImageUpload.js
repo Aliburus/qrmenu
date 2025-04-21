@@ -1,29 +1,39 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 
 export function ImageUpload({ onImageSelect, currentImageUrl }) {
+  // Preview state initialized from prop
   const [preview, setPreview] = useState(currentImageUrl || null);
+
+  // Sync preview when currentImageUrl prop changes (e.g., on form reset)
+  useEffect(() => {
+    if (currentImageUrl) {
+      setPreview(`http://localhost:5000${currentImageUrl}`);
+    } else {
+      setPreview(null);
+    }
+  }, [currentImageUrl]);
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
       if (acceptedFiles.length === 0) return;
       const file = acceptedFiles[0];
 
-      // 1) local preview
+      // Create local preview
       const reader = new FileReader();
       reader.onloadend = () => setPreview(reader.result);
       reader.readAsDataURL(file);
 
-      // 2) upload to server
+      // Upload to server
       const data = new FormData();
       data.append("image", file);
       try {
         const res = await axios.post("http://localhost:5000/api/upload", data, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        // backend’den gelen tam URL’i parent’a bildir
+        // Notify parent with relative path
         const relativePath = new URL(res.data.url).pathname;
         onImageSelect(relativePath);
       } catch (err) {
@@ -43,7 +53,7 @@ export function ImageUpload({ onImageSelect, currentImageUrl }) {
     <div className="w-full">
       <div
         {...getRootProps()}
-        className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors 
+        className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors \
           ${
             isDragActive
               ? "border-blue-500 bg-blue-50"
