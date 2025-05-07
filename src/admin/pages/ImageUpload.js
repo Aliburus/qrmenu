@@ -4,10 +4,8 @@ import axios from "axios";
 import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 
 export function ImageUpload({ onImageSelect, currentImageUrl }) {
-  // Preview state initialized from prop
   const [preview, setPreview] = useState(currentImageUrl || null);
 
-  // Sync preview when currentImageUrl prop changes (e.g., on form reset)
   useEffect(() => {
     if (currentImageUrl) {
       setPreview(`http://localhost:5000${currentImageUrl}`);
@@ -21,19 +19,17 @@ export function ImageUpload({ onImageSelect, currentImageUrl }) {
       if (acceptedFiles.length === 0) return;
       const file = acceptedFiles[0];
 
-      // Create local preview
       const reader = new FileReader();
       reader.onloadend = () => setPreview(reader.result);
       reader.readAsDataURL(file);
 
-      // Upload to server
       const data = new FormData();
       data.append("image", file);
       try {
         const res = await axios.post("http://localhost:5000/api/upload", data, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        // Notify parent with relative path
+
         const relativePath = new URL(res.data.url).pathname;
         onImageSelect(relativePath);
       } catch (err) {

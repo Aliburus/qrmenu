@@ -5,10 +5,9 @@ function Home() {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    const cachedData = sessionStorage.getItem("categories"); // Cache kontrolü
+    const cachedData = sessionStorage.getItem("categories");
     if (cachedData) {
-      setCategories(JSON.parse(cachedData)); // Cache varsa veriyi kullan
-      return; // Veriyi cache'den aldıktan sonra fetch yapmaya gerek yok
+      setCategories(JSON.parse(cachedData));
     }
 
     const fetchMenuItems = async () => {
@@ -19,7 +18,6 @@ function Home() {
         }
         const data = await response.json();
 
-        // Menü ürünlerinden benzersiz kategori isimlerini çıkarın
         const distinctCategories = [
           ...new Set(data.map((item) => item.category)),
         ];
@@ -31,13 +29,13 @@ function Home() {
         }));
 
         setCategories(categoryObjects);
-        sessionStorage.setItem("categories", JSON.stringify(categoryObjects)); // Cache'le
+        sessionStorage.setItem("categories", JSON.stringify(categoryObjects));
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
     };
 
-    fetchMenuItems(); // Veriyi API'den al
+    fetchMenuItems();
   }, []);
 
   return (

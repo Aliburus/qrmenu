@@ -9,18 +9,16 @@ function CategoryPage() {
   useEffect(() => {
     if (!category) return;
 
-    // Cache kontrolü
     const cachedItems = sessionStorage.getItem(`category-${category}`);
     if (cachedItems) {
-      setItems(JSON.parse(cachedItems)); // Cache'den veri al
-      // İlk harfi büyük yaparak kategori adını oluşturuyoruz.
+      setItems(JSON.parse(cachedItems));
       const decoded = decodeURIComponent(category);
       const pretty = decoded
         .split(" ")
         .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
         .join(" ");
       setCategoryName(pretty);
-      return; // Cache'den veri aldıktan sonra fetch yapmaya gerek yok
+      return;
     }
 
     const fetchCategoryItems = async () => {
@@ -34,10 +32,8 @@ function CategoryPage() {
         const data = await response.json();
         setItems(data);
 
-        // Cache'e kaydet
         sessionStorage.setItem(`category-${category}`, JSON.stringify(data));
 
-        // İlk harfi büyük yaparak kategori adını oluşturuyoruz.
         const decoded = decodeURIComponent(category);
         const pretty = decoded
           .split(" ")
