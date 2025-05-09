@@ -20,7 +20,7 @@ function AdminProducts() {
 
   const fetchProducts = async () => {
     try {
-      const { data } = await axios.get("http://localhost:5000/api/menu");
+      const { data } = await axios.get(`${baseUrl}/api/menu`);
       setProducts(data);
     } catch (err) {
       console.error("Menü ürünleri yüklenirken hata oldu:", err);
@@ -36,7 +36,7 @@ function AdminProducts() {
   const handleDelete = async (id) => {
     if (!window.confirm("Bu ürünü silmek istiyor musunuz?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/menu/${id}`);
+      await axios.delete(`${baseUrl}/api/menu/${id}`);
       fetchProducts();
       alert("Ürün başarıyla silindi!");
     } catch (err) {
@@ -54,11 +54,11 @@ function AdminProducts() {
       const submitData = { ...formData };
       if (editingProduct) {
         await axios.put(
-          `http://localhost:5000/api/menu/${editingProduct._id}`,
+          `${baseUrl}/api/menu/${editingProduct._id}`,
           submitData
         );
       } else {
-        await axios.post("http://localhost:5000/api/menu", submitData);
+        await axios.post(`${baseUrl}/api/menu`, submitData);
       }
       fetchProducts();
       setEditingProduct(null);
@@ -192,7 +192,7 @@ function AdminProducts() {
                 <td className="px-4 py-3 whitespace-nowrap">
                   <img
                     loading="lazy"
-                    src={`http://localhost:5000${product.imageUrl}`}
+                    src={`${baseUrl}${product.imageUrl}`}
                     alt={product.name}
                     className="w-16 h-16 object-cover rounded"
                   />

@@ -5,10 +5,11 @@ import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 
 export function ImageUpload({ onImageSelect, currentImageUrl }) {
   const [preview, setPreview] = useState(currentImageUrl || null);
+  const baseUrl = process.env.API_URL;
 
   useEffect(() => {
     if (currentImageUrl) {
-      setPreview(`http://localhost:5000${currentImageUrl}`);
+      setPreview(`${baseUrl}${currentImageUrl}`);
     } else {
       setPreview(null);
     }
@@ -26,7 +27,7 @@ export function ImageUpload({ onImageSelect, currentImageUrl }) {
       const data = new FormData();
       data.append("image", file);
       try {
-        const res = await axios.post("http://localhost:5000/api/upload", data, {
+        const res = await axios.post(`${baseUrl}/api/upload`, data, {
           headers: { "Content-Type": "multipart/form-data" },
         });
 

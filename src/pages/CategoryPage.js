@@ -5,7 +5,7 @@ function CategoryPage() {
   const { category } = useParams();
   const [items, setItems] = useState([]);
   const [categoryName, setCategoryName] = useState("");
-
+  const baseUrl = process.env.API_URL;
   useEffect(() => {
     if (!category) return;
 
@@ -24,7 +24,7 @@ function CategoryPage() {
     const fetchCategoryItems = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/category/${encodeURIComponent(category)}`
+          `${baseUrl}/api/category/${encodeURIComponent(category)}`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -72,7 +72,7 @@ function CategoryPage() {
                 <div className="md:w-1/2">
                   <img
                     loading="lazy"
-                    src={`http://localhost:5000${item.imageUrl}`}
+                    src={`${baseUrl}${item.imageUrl}`}
                     alt={item.name}
                     className="w-full h-full object-cover object-center max-h-[170px]"
                   />

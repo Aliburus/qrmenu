@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function Home() {
   const [categories, setCategories] = useState([]);
-
+  const baseUrl = process.env.API_URL;
   useEffect(() => {
     const cachedData = sessionStorage.getItem("categories");
     if (cachedData) {
@@ -12,7 +12,7 @@ function Home() {
 
     const fetchMenuItems = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/menu");
+        const response = await fetch(`${baseUrl}/api/menu`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -24,7 +24,7 @@ function Home() {
 
         const categoryObjects = distinctCategories.map((cat, index) => ({
           name: cat,
-          imageUrl: `http://localhost:5000/uploads/${index + 1}.jpg`,
+          imageUrl: `${baseUrl}/uploads/${index + 1}.jpg`,
           description: cat,
         }));
 
@@ -53,7 +53,7 @@ function Home() {
           {categories.map((category) => (
             <Link
               key={category.name}
-              to={`/category/${encodeURIComponent(category.name)}`}
+              to={`${baseUrl}/category/${encodeURIComponent(category.name)}`}
               className="group relative block"
             >
               <div className="aspect-[4/3] overflow-hidden rounded-xl">
