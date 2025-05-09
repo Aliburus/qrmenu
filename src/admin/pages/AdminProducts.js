@@ -20,7 +20,7 @@ function AdminProducts() {
 
   const fetchProducts = async () => {
     try {
-      const { data } = await axios.get(`${baseUrl}/api/menu`);
+      const { data } = await axios.get(`${baseUrl}api/menu`);
       setProducts(data);
     } catch (err) {
       console.error("Menü ürünleri yüklenirken hata oldu:", err);
@@ -36,7 +36,7 @@ function AdminProducts() {
   const handleDelete = async (id) => {
     if (!window.confirm("Bu ürünü silmek istiyor musunuz?")) return;
     try {
-      await axios.delete(`${baseUrl}/api/menu/${id}`);
+      await axios.delete(`${baseUrl}api/menu/${id}`);
       fetchProducts();
       alert("Ürün başarıyla silindi!");
     } catch (err) {
@@ -53,12 +53,9 @@ function AdminProducts() {
     try {
       const submitData = { ...formData };
       if (editingProduct) {
-        await axios.put(
-          `${baseUrl}/api/menu/${editingProduct._id}`,
-          submitData
-        );
+        await axios.put(`${baseUrl}api/menu/${editingProduct._id}`, submitData);
       } else {
-        await axios.post(`${baseUrl}/api/menu`, submitData);
+        await axios.post(`${baseUrl}api/menu`, submitData);
       }
       fetchProducts();
       setEditingProduct(null);

@@ -24,7 +24,7 @@ function CategoryPage() {
     const fetchCategoryItems = async () => {
       try {
         const response = await fetch(
-          `${baseUrl}/api/category/${encodeURIComponent(category)}`
+          `${baseUrl}api/category/${encodeURIComponent(category)}`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");

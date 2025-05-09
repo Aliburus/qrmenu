@@ -27,7 +27,7 @@ export function ImageUpload({ onImageSelect, currentImageUrl }) {
       const data = new FormData();
       data.append("image", file);
       try {
-        const res = await axios.post(`${baseUrl}/api/upload`, data, {
+        const res = await axios.post(`${baseUrl}api/upload`, data, {
           headers: { "Content-Type": "multipart/form-data" },
         });
 
